@@ -34,8 +34,8 @@ class AuthController extends Controller
     {
         $userid = $request->request->get('userid');
         $em = $this->getDoctrine()->getManager();
-        //DONE: validation
-        
+        //TODO: validation
+
     }
 
 }
