@@ -1,13 +1,29 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
+<!doctype html>
+<html lang="en">
+  <head>
+        <meta charset="utf-8">
+        <title>Test App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="description" content="Test">
+        <base href="/">
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
-    <body>
+    <body ng-app="app" ng-strict-di ng-cloak>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+
+        <script>
+            var BASE_URL = "{{ url('defaultIndex') }}";
+        </script>
+
+        {% block javascripts %}
+
+        <script src="{{ asset('bundles/vendor.bundle.js') }}"></script>
+        <script src="{{ asset('bundles/app.bundle.js') }}"></script>
+
+        {% endblock %}
     </body>
 </html>

@@ -24,9 +24,19 @@ class AuthController extends Controller
      */
     public function loginAction(Request $request)
     {
+        $content = $request->getContent();
 
-        $username = $request->request->get('username');
-        $password = $request->request->get('password');
+        $content = json_decode($content, true);
+
+        if (empty($content)) {
+            $response = new JsonResponse();
+                    $response->headers->clearCookie('LW_ssn');
+                    $response->setData(array('status' => 0, 'message' => 'invalid user information'));
+                    return $response;
+        }
+
+        $username = $content['username'];
+        $password = $content['password'];
 
         //DONE: validation
         if (
@@ -105,7 +115,17 @@ class AuthController extends Controller
 
         //DONE: response
         $response = new JsonResponse();
-        $response->headers->setCookie(new Cookie('LW_ssn', $session->getSessionId()));
+        $response->headers->setCookie(
+            new Cookie(
+                'LW_ssn',
+                $session->getSessionId(),
+                time() + (SESSION_LIMIT),
+                   '/',      // Path.
+                   null,     // Domain.
+                   false,    // Xmit secure https.
+                   false     // HttpOnly Flag.
+            )
+        );
         $response->setData(array(
             'status' => 1,
             'userid' => $user->getId()

@@ -7,7 +7,8 @@ import MainElements from './main';
 import AppComponent from './app.component';
 import 'normalize.css';
 import 'angular-ui-bootstrap';
-
+import 'angular-cookies';
+import $ from "jquery";
 
 angular.module('app', [
   uiRouter,
@@ -15,6 +16,7 @@ angular.module('app', [
   CommonElements,
   CommonThirdParty,
   MainElements,
+  'ngCookies',
   'ui.bootstrap'
 ])
   .config(($locationProvider) => {
