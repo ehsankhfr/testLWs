@@ -81,7 +81,7 @@ class AuthController extends Controller
         if (!empty($session)) {
             if ((time() - $session->getSessionTime()) > SESSION_LIMIT) {
                 $em = $this->getDoctrine()->getManager();
-                $query = $em->createQuery('DELETE AppBundle:Session s WHERE s.userId = :user_id');
+                $query = $em->createQuery('DELETE AppBundle:Sessions s WHERE s.userId = :user_id');
                 $query->setParameters(array(
                     ':user_id' => $user->getId()
                 ));
@@ -106,7 +106,10 @@ class AuthController extends Controller
         //DONE: response
         $response = new JsonResponse();
         $response->headers->setCookie(new Cookie('LW_ssn', $session->getSessionId()));
-        $response->setData(array('status' => 1));
+        $response->setData(array(
+            'status' => 1,
+            'userid' => $user->getId()
+        ));
         return $response;
     }
 
@@ -145,11 +148,11 @@ class AuthController extends Controller
         } else {
 
             $session = $this->getDoctrine()
-                ->getRepository('AppBundle:Session')
+                ->getRepository('AppBundle:Sessions')
                 ->findOneBySessionId($cookies->get('LW_ssn'));
 
             if ($session) {
-                $query = $em->createQuery('DELETE AppBundle:Session s WHERE s.userId = :user_id');
+                $query = $em->createQuery('DELETE AppBundle:Sessions s WHERE s.userId = :user_id');
                 $query->setParameters(array(
                     ':user_id' => $userid
                 ));
