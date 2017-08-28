@@ -17,21 +17,16 @@ const SESSION_LIMIT = 36000;
 
 class AuthController extends Controller
 {
-    //TODO: make it only POST
+
     /**
      * @Route("/api/version1/user/login", name="login")
-     * @Method({"POST","GET"})
+     * @Method({"POST"})
      */
     public function loginAction(Request $request)
     {
-        //TODO: make it only POST
-        if ($request->isMethod('GET')) {
-            $username = $request->query->get('username');
-            $password = $request->query->get('password');
-        } else {
-            $username = $request->request->get('username');
-            $password = $request->request->get('password');
-        }
+
+        $username = $request->request->get('username');
+        $password = $request->request->get('password');
 
         //DONE: validation
         if (
@@ -115,21 +110,65 @@ class AuthController extends Controller
         return $response;
     }
 
-    //TODO: make it only POST
     /**
      * @Route("/api/version1/user/logout", name="logout")
-     * @Method({"POST","GET"})
+     * @Method({"POST"})
      */
     public function logoutAction(Request $request)
     {
         $userid = $request->request->get('userid');
         $em = $this->getDoctrine()->getManager();
 
-        //TODO: validation
-        $response = new JsonResponse();
-        $response->setData(array('status' => 1));
-        return $response;
+        //DONE: validation
+        if ((empty($userid))) {
+            $response = new JsonResponse();
+            $response->headers->clearCookie('LW_ssn');
+            $response->setData(array(
+                'status' => 0,
+                'message' => 'invalid user information'
+            ));
+            return $response;
+        }
 
+        //TODO: more comments needed
+        $cookies = $request->cookies;
+        if (!$cookies->has('LW_ssn')) {
+
+            $response = new JsonResponse();
+            $response->headers->clearCookie('LW_ssn');
+            $response->setData(array(
+                'status' => 0,
+                'message' => 'invalid user information'
+            ));
+            return $response;
+
+        } else {
+
+            $session = $this->getDoctrine()
+                ->getRepository('AppBundle:Session')
+                ->findOneBySessionId($cookies->get('LW_ssn'));
+
+            if ($session) {
+                $query = $em->createQuery('DELETE AppBundle:Session s WHERE s.userId = :user_id');
+                $query->setParameters(array(
+                    ':user_id' => $userid
+                ));
+                $query->execute();
+                $response = new JsonResponse();
+                $response->headers->clearCookie('LW_ssn');
+                $response->setData(array('status' => 1));
+                return $response;
+            } else {
+                $response = new JsonResponse();
+                $response->headers->clearCookie('LW_ssn');
+                $response->setData(array(
+                    'status' => 0,
+                    'message' => 'invalid user information'
+                ));
+                return $response;
+            }
+
+        }
     }
 
 }
