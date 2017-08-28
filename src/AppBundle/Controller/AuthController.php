@@ -30,9 +30,9 @@ class AuthController extends Controller
 
         if (empty($content)) {
             $response = new JsonResponse();
-                    $response->headers->clearCookie('LW_ssn');
-                    $response->setData(array('status' => 0, 'message' => 'invalid user information'));
-                    return $response;
+            $response->headers->clearCookie('LW_ssn');
+            $response->setData(array('status' => 0, 'message' => 'invalid user information'));
+            return $response;
         }
 
         $username = $content['username'];
@@ -120,10 +120,10 @@ class AuthController extends Controller
                 'LW_ssn',
                 $session->getSessionId(),
                 time() + (SESSION_LIMIT),
-                   '/',      // Path.
-                   null,     // Domain.
-                   false,    // Xmit secure https.
-                   false     // HttpOnly Flag.
+                '/',      // Path.
+                null,     // Domain.
+                false,    // Xmit secure https.
+                false     // HttpOnly Flag.
             )
         );
         $response->setData(array(
@@ -153,7 +153,6 @@ class AuthController extends Controller
             return $response;
         }
 
-        //TODO: more comments needed
         $cookies = $request->cookies;
         if (!$cookies->has('LW_ssn')) {
 

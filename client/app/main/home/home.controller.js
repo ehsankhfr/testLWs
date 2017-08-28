@@ -3,8 +3,6 @@
 import angular from 'angular';
 import $ from "jquery";
 
-var BASE_URL = "http://localhost:8000/";
-
 class HomeController {
   constructor(CommunicationService, _, $scope, AuthenticationService, $interval) {
     "ngInject";
