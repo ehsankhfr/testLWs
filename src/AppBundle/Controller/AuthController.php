@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use AppBundle\Entity\Users;
+use AppBundle\Entity\Sessions;
+
+const SESSION_LIMIT = 36000;
 
 class AuthController extends Controller
 {
@@ -36,6 +39,7 @@ class AuthController extends Controller
             (empty($username) || strlen(trim($username)) < 2 || strlen(trim($username)) > 30)
         ) {
             $response = new JsonResponse();
+            $response->headers->clearCookie('LW_ssn');
             $response->setData(array('status' => 0, 'message' => 'invalid user information'));
             return $response;
         }
@@ -44,7 +48,7 @@ class AuthController extends Controller
         $user = $this->getDoctrine()
             ->getRepository('AppBundle:Users')
             ->findOneByUsername($username);
-        
+
         if (empty($user)) {
             // the user is getting created if it doesn't exist
             $user = new Users();
@@ -66,14 +70,47 @@ class AuthController extends Controller
             // if the user exist it will be checked against the stored password
             if (!password_verify($password, $user->getPassword())) {
                 $response = new JsonResponse();
+                $response->headers->clearCookie('LW_ssn');
                 $response->setData(array('status' => 0, 'message' => 'wrong password'));
                 return $response;
             }
         }
 
-        //TODO: Cookie creation
-        //TODO: response
+        //DONE: Cookie creation
+        $session = $this->getDoctrine()
+            ->getRepository('AppBundle:Sessions')
+            ->findOneByUserId($user->getId());
+
+        $shouldCreateSession = false;
+
+        if (!empty($session)) {
+            if ((time() - $session->getSessionTime()) > SESSION_LIMIT) {
+                $em = $this->getDoctrine()->getManager();
+                $query = $em->createQuery('DELETE AppBundle:Session s WHERE s.userId = :user_id');
+                $query->setParameters(array(
+                    ':user_id' => $user->getId()
+                ));
+                $shouldCreateSession = true;
+            }
+
+        } else {
+            $shouldCreateSession = true;
+        }
+
+        if ($shouldCreateSession) {
+            $session = new Sessions();
+            $session->setUserId($user->getId());
+            $session->setSessionId(uniqid() . time());
+            $session->setSessionTime(time());
+            $em = $this->getDoctrine()->getManager();
+
+            $em->persist($session);
+            $em->flush();
+        }
+
+        //DONE: response
         $response = new JsonResponse();
+        $response->headers->setCookie(new Cookie('LW_ssn', $session->getSessionId()));
         $response->setData(array('status' => 1));
         return $response;
     }
@@ -87,6 +124,7 @@ class AuthController extends Controller
     {
         $userid = $request->request->get('userid');
         $em = $this->getDoctrine()->getManager();
+
         //TODO: validation
         $response = new JsonResponse();
         $response->setData(array('status' => 1));
