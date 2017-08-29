@@ -24,5 +24,9 @@ php bin/console server:run
 ## The implementation description
 
 I chose 2 frameworks for the project:
-1. Symfony (Backend): as it gives us the power to have wrapper for all the possible php low-level features, e.g. super global varibales, response handling ...
-2- AngularJs (Frontend): as it gives us the ability to design the application with a completely modular structure
+1. Symfony (Backend): as it(as a framework) gives us the power to have wrapper for all the possible php low-level features, e.g. super global varibales, response handling ...
+2. AngularJs (Frontend): as it gives us the ability to design the application with a completely modular structure
+
+One of the enjoyable points of symfony is the cli tool that it provides to auto-create both creation and migration of the project. I used it for many parts, including entity creation and controller initialization. For the backend side, all of the used libraries are taken from the Symfony itself. All the routings are done by the annotations(decoration pattern).
+
+For the frontend section, I used jQuery for the easier html operation handling, lodash for easier data processing, bootstrap for responsive design, ui-router for a better and more structured routing.
