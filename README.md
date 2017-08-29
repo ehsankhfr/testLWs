@@ -15,6 +15,8 @@ npm install
 npm run build
 ```
 
+## Run
+
 To run server:
 ```
 php bin/console server:run
