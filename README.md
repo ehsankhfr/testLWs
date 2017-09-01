@@ -21,7 +21,7 @@ database_name: symfony
 database_user: root
 database_password: ~
 ```   
-*Note:* It all depends how you have defined the database settings on your computer! Please update this file according your current local settings.
+*Note:* It all depends how the database settings are defined on your computer! Please update this file according your current local settings.
 
 ### Compilation and Structuring
 
