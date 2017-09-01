@@ -23,6 +23,8 @@ database_password: ~
 ```   
 *Note:* It all depends how the database settings are defined on your computer! Please update this file according your current local settings.
 
+*More info:* [Configuration of MySql](https://dev.mysql.com/doc/workbench/en/wb-mysql-connections-methods-standard.html)
+
 ### Compilation and Structuring
 
 Please run the following for backend initialization:
