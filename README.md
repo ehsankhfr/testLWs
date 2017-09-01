@@ -1,7 +1,29 @@
 testLW
 ======
 
+## Requirements
+
+1. PHP 7.x
+2. MySql database
+3. NPM
+4. Composer
+
 ## Setup
+
+### DB settings
+
+The project by default uses the following database configuration (located in testLWs/app/config/parameters.yml.dist):
+
+``` 
+database_host: 127.0.0.1
+database_port: ~
+database_name: symfony
+database_user: root
+database_password: ~
+```   
+*Note:* It all depends how you have defined the database settings on your computer! Please update this file according your current local settings.
+
+### Compilation and Structuring
 
 Please run the following for backend initialization:
 ```
