@@ -65,3 +65,5 @@ For the frontend section, I used jQuery for the easier html operation handling, 
 The application was inteded to work with usernames as email address, however in the current version the email address validation for the username is removed and the application accepts any username string with 2<=length<=30 and password with 8<=length<=15.
 
 Any login with a new username will cause auto-registration of the user information. Any repeated username for the login will need the currect password to be entered.
+
+After login and keeping the computer idle for 1 minute, it will logout automatically.
